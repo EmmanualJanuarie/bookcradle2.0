@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="Auth.Controller"
+           stylesheets="@../styles/styles.css"
+           prefWidth="600" prefHeight="500">
+
+    <VBox spacing="20" alignment="CENTER" styleClass="glass-container">
+
+        <!-- Horizontal switch buttons -->
+        <HBox spacing="0" styleClass="toggle-bar">
+            <Button fx:id="adminBtn" text="👨‍💼 Admin" onAction="#showAdminLogin" styleClass="toggle-button"/>
+            <Button fx:id="userBtn" text="🙋 User" onAction="#showUserLogin" styleClass="toggle-button"/>
+        </HBox>
+
+        <!-- Placeholder for dynamic form -->
+        <StackPane fx:id="formPane" styleClass="form-pane"/>
+    </VBox>
+</StackPane>
