@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="Admin.AdminController"
+      spacing="20" alignment="CENTER" padding="20">
+
+    <Label text="Admin Dashboard" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+
+    <GridPane hgap="10" vgap="10">
+        <Button text="Add Book" onAction="#handleAddBook" />
+        <Button text="Add Member" onAction="#handleAddMember" />
+        <Button text="Search Book" onAction="#handleSearchBook" />
+        <Button text="Search Member" onAction="#handleSearchMember" />
+        <Button text="Borrowed List" onAction="#handleDisplayBorrowed" />
+        <Button text="Return Book" onAction="#handleReturnBook" />
+    </GridPane>
+
+    <Button text="Logout" onAction="#handleLogout"
+            style="-fx-background-color: #e74c3c; -fx-text-fill: white;" />
+
+</VBox>
