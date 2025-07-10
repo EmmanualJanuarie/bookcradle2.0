@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.bookcradle.admin.UserLogsController"
+      spacing="15" stylesheets="/styles/AdminStyle.css">
+
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <Label text="User Borrow Logs" styleClass="card-title"/>
+
+    <TableView fx:id="userLogsTable" prefHeight="600" prefWidth="900">
+
+        <columns>
+            <TableColumn text="User" fx:id="userColumn" prefWidth="150"/>
+            <TableColumn text="Book" fx:id="bookColumn" prefWidth="250"/>
+            <TableColumn text="Borrow Date" fx:id="borrowDateColumn" prefWidth="150"/>
+            <TableColumn text="Return Date" fx:id="returnDateColumn" prefWidth="150"/>
+            <TableColumn text="Late Fee" fx:id="lateFeeColumn" prefWidth="100"/>
+            <TableColumn text="Status" fx:id="statusColumn" prefWidth="100"/>
+        </columns>
+    </TableView>
+
+</VBox>

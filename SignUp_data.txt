@@ -1,0 +1,2 @@
+name=Banzi,surname=Dube,email=banzidube@capaciti.org.za,password=ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f
+name=Ntombi,surname=Qandashe,email=NtombiQandashe@capaciti.org.za,password=5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5

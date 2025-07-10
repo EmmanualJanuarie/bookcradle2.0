@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.bookcradle.admin.AdminController"
+            prefWidth="1200" prefHeight="800"
+            stylesheets="/styles/AdminStyle.css">
+
+    <HBox spacing="0" prefWidth="1200" prefHeight="800">
+
+        <!-- Sidebar Navigation -->
+        <VBox spacing="20" styleClass="sidebar" prefWidth="220">
+            <padding>
+                <Insets top="30" right="20" bottom="30" left="20" />
+            </padding>
+            <Label text="BookCradle" styleClass="sidebar-title" />
+            <Button fx:id="dashboardButton" text="Dashboard" styleClass="sidebar-button" />
+            <Button fx:id="addBookButton" text="Add Book" styleClass="sidebar-button" />
+            <Button fx:id="userLogsButton" text="User Logs" styleClass="sidebar-button" />
+            <Button fx:id="logoutButton" text="Logout" onAction="#handleLogout" styleClass="btn-logout" />
+        </VBox>
+
+        <!-- Main Content -->
+        <VBox fx:id="rootVBox" spacing="30" styleClass="main-content" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="220" AnchorPane.rightAnchor="0">
+            <padding>
+                <Insets top="30" right="30" bottom="30" left="30" />
+            </padding>
+
+            <!-- Admin Greeting -->
+            <Label fx:id="adminName" text="Welcome, Admin" styleClass="admin-greeting" />
+
+            <!-- Placeholder for swapping views -->
+            <StackPane fx:id="contentPane" 
+                AnchorPane.topAnchor="0"
+                AnchorPane.bottomAnchor="0"
+                AnchorPane.leftAnchor="0"
+                AnchorPane.rightAnchor="0" />
+        </VBox>
+
+    </HBox>
+</AnchorPane>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20" styleClass="card"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.bookcradle.admin.EditBookController"
+      stylesheets="/styles/BookStyle.css">
+
+    <padding>
+        <Insets top="25" right="25" bottom="25" left="25" />
+    </padding>
+
+    <Label text="Edit Book" styleClass="card-title" />
+
+    <GridPane hgap="20" vgap="20">
+        <Label text="Title:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+        <TextField fx:id="titleField" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="text-field"/>
+
+        <Label text="Author:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+        <TextField fx:id="authorField" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="text-field"/>
+
+        <Label text="ISBN:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+        <TextField fx:id="isbnField" GridPane.rowIndex="2" GridPane.columnIndex="1" styleClass="text-field"/>
+
+        <Label text="Due Date:" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+        <DatePicker fx:id="dueDateField" GridPane.rowIndex="3" GridPane.columnIndex="1" styleClass="date-picker"/>
+    </GridPane>
+
+    <HBox spacing="20" alignment="CENTER">
+        <Button text="Save Changes" onAction="#handleSaveChanges" styleClass="btn-primary" />
+    </HBox>
+    
+</VBox>
