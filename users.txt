@@ -1,1 +1,1 @@
-banzidube@capaciti.org.za,Banzi,Dube,0,
+johndoe@gmail.com,John,Doe,1,Harry Potter and the Golden Snitch

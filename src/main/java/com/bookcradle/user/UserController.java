@@ -6,12 +6,14 @@ import com.bookcradle.services.BookService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -39,6 +41,8 @@ public class UserController {
     @FXML
     private Button logoutButton;
     @FXML
+    private Button deleteButton;
+    @FXML
     private Label lateFeeLabel;
     @FXML
     private Button payLateFeeButton;
@@ -47,6 +51,7 @@ public class UserController {
     public void initialize() {
         payLateFeeButton.setOnAction(this::handlePayLateFee);
         logoutButton.setOnAction(this::handleLogout);
+        deleteButton.setOnAction(this::handleDeleteAccount);
 
         isbnSearchBar.setOnKeyReleased(this::searchBooks);
         titleSearchBar.setOnKeyReleased(this::searchBooks);
@@ -291,7 +296,7 @@ public class UserController {
 
     private void logToFile(String userEmail, String bookTitle, LocalDate borrowDate, LocalDate returnDate,
             double lateFee) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("UserLogs_data.txt", true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("LibraryData.txt", true))) {
             String line = userEmail + "," + bookTitle + "," + borrowDate + "," + (returnDate == null ? "" : returnDate)
                     + "," + lateFee;
             writer.write(line);
@@ -319,4 +324,120 @@ public class UserController {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    private void handleDeleteAccount(ActionEvent event) {
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Confirm Deletion");
+        confirmation.setHeaderText("Are you sure you want to delete your account?");
+        confirmation.setContentText("This action is permanent and cannot be undone.");
+
+        // Custom buttons
+        ButtonType deleteButton = new ButtonType("Delete", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        confirmation.getButtonTypes().setAll(deleteButton, cancelButton);
+
+        DialogPane dialogPane = confirmation.getDialogPane();
+
+        // Posh Apple-like CSS
+        dialogPane.setStyle("""
+                    -fx-background-radius: 25;
+                    -fx-border-radius: 25;
+                    -fx-border-color: transparent; /* ✨ Removes the border */
+                    -fx-border-color: #e0e0e0;
+                    -fx-border-width: 1.5px;
+                    -fx-background-color: rgba(255, 255, 255, 0.85);
+                    -fx-font-family: 'SF Pro Text', 'Segoe UI', sans-serif;
+                    -fx-font-size: 14px;
+                    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 20, 0, 0, 4);
+                """);
+
+        // Style the Delete button (Red, rounded, bold)
+        Node deleteNode = dialogPane.lookupButton(deleteButton);
+        if (deleteNode != null) {
+            deleteNode.setStyle("""
+                        -fx-background-color: #ff3b30;
+                        -fx-text-fill: white;
+                        -fx-font-weight: bold;
+                        -fx-background-radius: 20;
+                        -fx-padding: 8 20;
+                        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 2);
+                    """);
+        }
+
+        // Style the Cancel button (Grey, rounded)
+        Node cancelNode = dialogPane.lookupButton(cancelButton);
+        if (cancelNode != null) {
+            cancelNode.setStyle("""
+                        -fx-background-color: #e0e0e0;
+                        -fx-text-fill: #333;
+                        -fx-font-weight: normal;
+                        -fx-background-radius: 20;
+                        -fx-padding: 8 20;
+                    """);
+        }
+
+        // Add optional icon (Apple-style flair)
+        Stage stage = (Stage) dialogPane.getScene().getWindow();
+        stage.initStyle(StageStyle.TRANSPARENT);
+        stage.getIcons().clear(); // Optional: set app icon or remove
+
+        // Show confirmation
+        Optional<ButtonType> result = confirmation.showAndWait();
+        if (result.isPresent() && result.get() == deleteButton) {
+            String email = currentUser.getEmail();
+            deleteUserFromSignUpData(email);
+            deleteLineFromFile("UserBooks_data.txt", "email=" + email);
+            handleLogout(event);
+        }
+    }
+
+    private void deleteUserFromSignUpData(String email) {
+        File inputFile = new File("SignUp_data.txt");
+        File tempFile = new File("temp_SignUp_data.txt");
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+                BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (!line.contains("email=" + email)) {
+                    writer.write(line);
+                    writer.newLine();
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (!inputFile.delete() || !tempFile.renameTo(inputFile)) {
+            System.err.println("Error replacing SignUp_data.txt file.");
+        }
+    }
+
+    private void deleteLineFromFile(String fileName, String matchPrefix) {
+        File inputFile = new File(fileName);
+        File tempFile = new File("temp_" + fileName);
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+                BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (!line.startsWith(matchPrefix)) {
+                    writer.write(line);
+                    writer.newLine();
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (!inputFile.delete() || !tempFile.renameTo(inputFile)) {
+            System.err.println("Error replacing " + fileName);
+        }
+    }
+
 }

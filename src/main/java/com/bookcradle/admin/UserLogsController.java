@@ -43,7 +43,7 @@ public class UserLogsController {
         lateFeeColumn.setCellValueFactory(new PropertyValueFactory<>("lateFee"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        userLogsTable.setItems(loadLogsFromFile("UserLogs_data.txt"));
+        userLogsTable.setItems(loadLogsFromFile("LibraryData.txt"));
     }
 
     private ObservableList<UserLog> loadLogsFromFile(String filePath) {

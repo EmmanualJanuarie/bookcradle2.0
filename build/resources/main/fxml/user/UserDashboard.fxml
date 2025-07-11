@@ -86,6 +86,7 @@
 
             <!-- Bottom Buttons -->
             <HBox spacing="20" alignment="CENTER">
+                <Button fx:id="deleteButton" text="Delete Account" styleClass="btn-delete" HBox.hgrow="ALWAYS"/>
                 <Button fx:id="logoutButton" text="Logout" styleClass="btn-logout" HBox.hgrow="ALWAYS"/>
             </HBox>
 

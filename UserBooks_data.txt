@@ -1,2 +1,3 @@
 banzidube@capaciti.org.za,That witch has horns,2025-07-03,2025-07-10,0.0,false
-email=banzidube@capaciti.org.za,books=
+johndoe@gmail.com,Harry Potter and the Golden Snitch,2025-07-11,,0.0,false
+email=johndoe@gmail.com,books=Harry Potter and the Golden Snitch

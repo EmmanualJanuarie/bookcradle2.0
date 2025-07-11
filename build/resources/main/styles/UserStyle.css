@@ -172,6 +172,20 @@
     -fx-background-color: #c0392b;
 }
 
+.btn-delete{
+    -fx-background-color: #2eaf4a;
+    -fx-text-fill: white;
+    -fx-padding: 12px 30px;
+    -fx-font-size: 16px;
+    -fx-background-radius: 16px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+}
+
+.btn-delete:hover {
+    -fx-background-color: #259b40;
+}
+
 .btn-search {
     -fx-background-color: #007aff;
     -fx-text-fill: white;
