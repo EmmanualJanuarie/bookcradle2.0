@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Imports -->
+<?import javafx.scene.layout.AnchorPane?> 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.ScrollPane?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.bookcradle.user.UserController"
+            prefWidth="1200" prefHeight="700"
+            stylesheets="@/styles/UserStyle.css">
+
+    <HBox spacing="50" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.bottomAnchor="20">
+
+        <!-- LEFT SECTION: Profile + Borrowed Books -->
+        <VBox spacing="30" HBox.hgrow="ALWAYS">
+            
+            <!-- Profile Section -->
+            <VBox styleClass="profile-section" spacing="20">
+                <padding>
+                    <Insets top="25" right="25" bottom="25" left="25"/>
+                </padding>
+
+                <Label text="User Profile" styleClass="section-title" wrapText="true" maxWidth="Infinity"/>
+
+                <HBox spacing="20" alignment="CENTER_LEFT">
+                    <Label text="Name:" styleClass="profile-label"/>
+                    <Label fx:id="userNameLabel" text="John Doe" styleClass="profile-info"/>
+                </HBox>
+
+                <HBox spacing="20" alignment="CENTER_LEFT">
+                    <Label text="Surname:" styleClass="profile-label"/>
+                    <Label fx:id="userSurnameLabel" text="Doe" styleClass="profile-info"/>
+                </HBox>
+
+                <Label text="Borrowed Books" styleClass="section-subtitle" wrapText="true" maxWidth="Infinity"/>
+
+                <ScrollPane fitToWidth="true" fitToHeight="true" prefHeight="300" style="-fx-background-color:transparent;" vbarPolicy="AS_NEEDED" hbarPolicy="NEVER">
+                    <VBox fx:id="borrowedBooksVBox" spacing="15" styleClass="borrowed-books-list">
+                        <padding>
+                            <Insets top="10" right="10" bottom="10" left="10"/>
+                        </padding>
+                    </VBox>
+                </ScrollPane>
+
+                <HBox spacing="15" fx:id="lateFeeHBox" visible="false" alignment="CENTER_LEFT">
+                    <Label text="Late Fee:" styleClass="profile-label"/>
+                    <Label fx:id="lateFeeLabel" text="R0.00" styleClass="late-fee-info"/>
+                    <Button fx:id="payLateFeeButton" text="Pay Late Fee" onAction="#handlePayLateFee" styleClass="btn-pay-late-fee"/>
+                </HBox>
+            </VBox>
+        </VBox>
+
+        <!-- RIGHT SECTION: Available Books Search + Carousel -->
+        <VBox spacing="30" HBox.hgrow="ALWAYS">
+
+            <!-- Available Book Section -->
+            <VBox styleClass="available-books-section" spacing="30">
+                <padding>
+                    <Insets top="25" right="25" bottom="25" left="25"/>
+                </padding>
+
+                <Label text="Available Books to Borrow" styleClass="section-title" wrapText="true" maxWidth="Infinity"/>
+
+                <!-- ✅ Full Search Inputs Added -->
+                <VBox spacing="10">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <TextField fx:id="isbnSearchBar" promptText="Search by ISBN" styleClass="search-bar"/>
+                        <TextField fx:id="titleSearchBar" promptText="Search by Title" styleClass="search-bar"/>
+                        <TextField fx:id="authorSearchBar" promptText="Search by Author" styleClass="search-bar"/>
+                        <Button text="Search" onAction="#searchBooks" styleClass="btn-search"/>
+                    </HBox>
+
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <TextField fx:id="genreSearchBar" promptText="Search by Genre" styleClass="search-bar"/>
+                        <TextField fx:id="yearSearchBar" promptText="Search by Year" styleClass="search-bar"/>
+                    </HBox>
+                </VBox>
+
+                <ScrollPane fitToWidth="true" prefHeight="300" style="-fx-background-color:transparent;" hbarPolicy="AS_NEEDED" vbarPolicy="NEVER">
+                    <HBox fx:id="availableBooksHBox" spacing="20">
+                        <padding>
+                            <Insets top="10" right="10" bottom="10" left="10"/>
+                        </padding>
+                    </HBox>
+                </ScrollPane>
+            </VBox>
+
+            <!-- Bottom Buttons -->
+            <HBox spacing="20" alignment="CENTER">
+                <Button fx:id="deleteButton" text="Delete Account" styleClass="btn-delete" HBox.hgrow="ALWAYS"/>
+                <Button fx:id="logoutButton" text="Logout" styleClass="btn-logout" HBox.hgrow="ALWAYS"/>
+            </HBox>
+
+        </VBox>
+    </HBox>
+</AnchorPane>

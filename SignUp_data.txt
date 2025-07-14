@@ -1,0 +1,3 @@
+name=Ntombi,surname=Qandashe,email=NtombiQandashe@capaciti.org.za,password=5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5
+name=John,surname=Doe,email=johndoe@gmail.com,password=5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8
+name=Jane,surname=Doe,email=janedoe@gmail.com,password=5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8

@@ -1,0 +1,266 @@
+/* Root & overall layout */
+.root {
+    -fx-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    -fx-background-color: #fafafa;
+    -fx-pref-width: 100%;
+    -fx-pref-height: 100%;
+}
+
+/* Sidebar styling */
+.sidebar {
+    -fx-background-color: #f8f8f8;
+    -fx-padding: 40 25 40 25;
+    -fx-pref-width: 260;
+    -fx-border-radius: 0 24 24 0;
+    -fx-background-radius: 0 24 24 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 10, 0, 0, 3);
+    -fx-spacing: 30;
+    -fx-alignment: center;
+    -fx-cursor: default;
+}
+
+/* Sidebar title */
+.sidebar-title {
+    -fx-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 32px;
+    -fx-text-fill: #333333;
+    -fx-font-weight: 700;
+    -fx-padding: 0 0 40 0;
+}
+
+/* Sidebar buttons */
+.sidebar-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #555555;
+    -fx-font-size: 18px;
+    -fx-font-weight: 600;
+    -fx-padding: 14 22;
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
+    -fx-cursor: hand;
+    -fx-alignment: center-left;
+    -fx-min-width: 210;
+    -fx-transition: all 0.3s ease;
+}
+
+.sidebar-button:hover, .sidebar-button:focused {
+    -fx-background-color: #007aff; /* Apple blue */
+    -fx-text-fill: white;
+    -fx-font-weight: 700;
+    -fx-effect: dropshadow(gaussian, rgba(0, 122, 255, 0.7), 10, 0, 0, 4);
+}
+
+/* Logout button standout */
+.btn-logout {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-padding: 12px 30px;
+    -fx-font-size: 16px;
+    -fx-background-radius: 16px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+}
+
+.btn-logout:hover {
+    -fx-background-color: #c0392b;
+}
+
+
+
+/* Main content */
+.main-content {
+    -fx-background-color: white;
+    -fx-border-radius: 32 0 0 32;
+    -fx-background-radius: 32 0 0 32;
+    -fx-padding: 50 70 70 70;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 20, 0, 0, 8);
+    -fx-spacing: 40;
+    -fx-alignment: top-center;
+    -fx-pref-width: calc(100% - 260px);
+}
+
+/* Admin greeting */
+.admin-greeting {
+    -fx-font-size: 320px;
+    -fx-font-weight: 800;
+    -fx-text-fill: linear-gradient(to right, #1e1e1e, #4a4a4a);
+    -fx-effect: dropshadow(gaussian, rgba(30,30,30,0.25), 2, 0, 0, 1);
+    -fx-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+                     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    -fx-padding: 0 0 15 0;
+}
+
+/* Card style */
+.card {
+    -fx-background-color: #fefefe;
+    -fx-padding: 30;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 15, 0, 0, 6);
+    -fx-spacing: 20;
+}
+
+/* Card titles */
+.card-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #111111;
+    -fx-padding: 0 0 20 0;
+}
+
+/* Primary button */
+.btn-primary {
+    -fx-background-color: #007aff;
+    -fx-text-fill: white;
+    -fx-font-weight: 700;
+    -fx-padding: 14 36;
+    -fx-border-radius: 16;
+    -fx-background-radius: 16;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 122, 255, 0.6), 10, 0, 0, 5);
+    -fx-transition: all 0.25s ease;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #005ecb;
+}
+
+/* Inputs */
+.text-field, .date-picker {
+    -fx-background-color: white;
+    -fx-border-color: #d1d1d6;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 14 20;
+    -fx-font-size: 16px;
+    -fx-text-fill: #222222;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.02), 3, 0, 0, 1);
+}
+
+.text-field:focused, .date-picker:focused {
+    -fx-border-color: #007aff;
+    -fx-effect: dropshadow(gaussian, rgba(0,122,255,0.4), 12, 0, 0, 3);
+}
+
+/* ScrollPane & carousel */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-border-color: transparent;
+}
+
+/* Book cards inside carousel */
+.book-card {
+    -fx-background-color: white;
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
+    -fx-padding: 18 24;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 12, 0, 0, 5);
+    -fx-pref-width: 340;
+    -fx-pref-height: 100;
+    -fx-spacing: 4;
+    -fx-alignment: center-left;
+    -fx-cursor: default;
+    -fx-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+
+/* Book card text formatting */
+.book-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #111111;
+}
+
+.book-author {
+    -fx-font-size: 15px;
+    -fx-text-fill: #555555;
+}
+
+/* Danger button for Remove */
+.btn-danger {
+    -fx-background-color: #ff3b30; /* Apple red */
+    -fx-text-fill: white;
+    -fx-font-weight: 900;
+    -fx-padding: 8 16;
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(255,59,48,0.7), 8, 0, 0, 3);
+    -fx-transition: all 0.25s ease;
+}
+
+.btn-danger:hover {
+    -fx-background-color: #bf2b24;
+}
+
+/* Primary button for Edit */
+.btn-primary {
+    -fx-background-color: #007aff; /* Apple Blue */
+    -fx-text-fill: white;
+    -fx-font-weight: 900;
+    -fx-padding: 8 16;
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,122,255,0.7), 8, 0, 0, 3);
+    -fx-transition: all 0.25s ease;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #005ecb;
+}
+
+/* --- Primary Add Button (iOS blue) --- */
+.btn-primary {
+    -fx-background-color: linear-gradient(to bottom, #007aff, #005ecb);
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10 20;
+    -fx-background-radius: 25;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 6, 0.2, 0, 2);
+}
+.btn-primary:hover {
+    -fx-background-color: #005ecb;
+}
+.btn-primary:pressed {
+    -fx-background-color: #003e99;
+}
+
+
+
+/* --- Edit Button (Rounded, Apple Blue) --- */
+.btn-edit {
+    -fx-background-color: #0a84ff;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-background-radius: 20;
+    -fx-padding: 6 16;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+.btn-edit:hover {
+    -fx-background-color: #006edc;
+}
+.btn-edit:pressed {
+    -fx-background-color: #0052a3;
+}
+
+/* --- Remove Button (Rounded, Apple Red) --- */
+.btn-remove {
+    -fx-background-color: #ff3b30;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-background-radius: 20;
+    -fx-padding: 6 16;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+.btn-remove:hover {
+    -fx-background-color: #e02822;
+}
+.btn-remove:pressed {
+    -fx-background-color: #b91d19;
+}
+

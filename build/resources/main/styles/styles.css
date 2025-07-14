@@ -1,0 +1,76 @@
+.glass-container {
+    -fx-background-color: linear-gradient(to bottom right, #eef2f3, #8e9eab);
+    -fx-padding: 40;
+    -fx-background-radius: 25;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 12, 0.3, 0, 5);
+}
+
+.toggle-bar {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 30;
+    -fx-border-radius: 30;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 10, 0.2, 0, 2);
+}
+
+.toggle-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #1e293b;
+    -fx-font-weight: 600;
+    -fx-font-size: 16;
+    -fx-cursor: hand;
+    -fx-padding: 12 25;
+    -fx-background-radius: 30;
+    -fx-pref-width: 50%;
+}
+
+.toggle-button:hover {
+    -fx-background-color: #e0f2fe;
+    -fx-text-fill: #0f172a;
+}
+
+.form-pane {
+    -fx-padding: 30;
+    -fx-background-color: rgba(255,255,255,0.4);
+    -fx-background-radius: 20;
+    -fx-min-height: 250;
+    -fx-effect: dropshadow(two-pass-box, rgba(0,0,0,0.1), 6, 0.2, 0, 2);
+}
+
+.form .text-field,
+.form .password-field {
+    -fx-background-radius: 12;
+    -fx-padding: 10;
+    -fx-font-size: 14;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 12;
+}
+
+.form .text-field:focused,
+.form .password-field:focused {
+    -fx-border-color: #0ea5e9;
+    -fx-border-width: 2;
+}
+
+.form-button {
+    -fx-background-color: #0ea5e9;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14;
+    -fx-background-radius: 12;
+    -fx-cursor: hand;
+    -fx-padding: 10 0;
+}
+
+.form-button:hover {
+    -fx-background-color: #0284c7;
+}
+
+.form-button-alt {
+    -fx-background-color: transparent;
+    -fx-text-fill: #0ea5e9;
+    -fx-font-weight: 500;
+    -fx-underline: true;
+    -fx-cursor: hand;
+    -fx-padding: 10 0;
+}

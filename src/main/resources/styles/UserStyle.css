@@ -1,0 +1,195 @@
+/* ---------- GLOBAL ROOT STYLING ---------- */
+.root {
+    -fx-background-color: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+    -fx-font-family: "SF Pro Display", "Segoe UI", sans-serif;
+    -fx-font-size: 15px;
+}
+
+/* ---------- SECTION TITLES ---------- */
+.section-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #2c3e50;
+    -fx-wrap-text: true;
+}
+
+.section-subtitle {
+    -fx-font-size: 20px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #34495e;
+}
+
+/* ---------- PROFILE SECTION ---------- */
+.profile-section {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 25px;
+    -fx-border-radius: 25px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 12, 0.3, 0, 3);
+}
+
+/* ---------- Profile Labels ---------- */
+.profile-label {
+    -fx-font-size: 16px;
+    -fx-text-fill: #7f8c8d;
+}
+
+.profile-info {
+    -fx-font-size: 17px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #2d3436;
+}
+
+/* ---------- Borrowed Books ---------- */
+.borrowed-books-list {
+    -fx-background-color: #f6f8fa;
+    -fx-border-radius: 15px;
+    -fx-spacing: 20;
+}
+
+.borrowed-books-scroll {
+    -fx-background-color: transparent;
+    -fx-padding: 10;
+}
+
+/* ---------- Individual Book Item ---------- */
+.book-list-item {
+    -fx-background-color: #eef3f7;
+    -fx-border-radius: 12px;
+    -fx-padding: 18px;
+    -fx-font-size: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 5, 0.1, 0, 2);
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+.book-list-item:hover {
+    -fx-background-color: #dde6f1;
+    -fx-cursor: hand;
+}
+
+/* ---------- LATE FEE ---------- */
+.late-fee-info {
+    -fx-font-size: 16px;
+    -fx-text-fill: #c0392b;
+}
+
+.btn-pay-late-fee {
+    -fx-background-color: linear-gradient(to right, #007aff, #0051ff);
+    -fx-text-fill: white;
+    -fx-padding: 10px 22px;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 14px;
+    -fx-border-radius: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0.3, 0, 3);
+}
+
+.btn-pay-late-fee:hover {
+    -fx-background-color: linear-gradient(to right, #0051ff, #0031cc);
+}
+
+/* ---------- SEARCH BAR ---------- */
+.search-bar {
+    -fx-background-radius: 10;
+    -fx-padding: 10 15;
+    -fx-font-size: 14px;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 10;
+    -fx-background-color: #f5f5f5;
+}
+
+.search-bar:focused {
+    -fx-border-color: #007aff;
+}
+
+/* ---------- AVAILABLE BOOKS SECTION ---------- */
+.available-books-section {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 25px;
+    -fx-border-radius: 25px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 12, 0.3, 0, 3);
+}
+
+/* ---------- Carousel Book Cards ---------- */
+#availableBooksHBox > .book-list-item {
+    -fx-min-width: 200px;
+    -fx-max-width: 250px;
+    -fx-alignment: TOP_CENTER;
+}
+
+.book-card {
+    -fx-background-color: #ffffff;
+    -fx-padding: 15;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0.1, 2, 2);
+    -fx-pref-width: 200;
+}
+
+.book-title {
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+.book-author {
+    -fx-text-fill: #555555;
+}
+
+.book-borrow-btn {
+    -fx-background-color: #007aff;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-font-weight: bold;
+}
+
+/* ---------- BUTTONS: Return / Logout ---------- */
+.btn-return-book {
+    -fx-background-color: linear-gradient(to right, #34c759, #30b158);
+    -fx-text-fill: white;
+    -fx-padding: 12px 30px;
+    -fx-font-size: 16px;
+    -fx-background-radius: 16px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+}
+
+.btn-return-book:hover {
+    -fx-background-color: linear-gradient(to right, #2eaf4a, #259b40);
+}
+
+.btn-logout {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-padding: 12px 30px;
+    -fx-font-size: 16px;
+    -fx-background-radius: 16px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+}
+
+.btn-logout:hover {
+    -fx-background-color: #c0392b;
+}
+
+.btn-delete{
+    -fx-background-color: #2eaf4a;
+    -fx-text-fill: white;
+    -fx-padding: 12px 30px;
+    -fx-font-size: 16px;
+    -fx-background-radius: 16px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+}
+
+.btn-delete:hover {
+    -fx-background-color: #259b40;
+}
+
+.btn-search {
+    -fx-background-color: #007aff;
+    -fx-text-fill: white;
+    -fx-background-radius: 10;
+    -fx-padding: 10 20;
+    -fx-font-size: 14px;
+}

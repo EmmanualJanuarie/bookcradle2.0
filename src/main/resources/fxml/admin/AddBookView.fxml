@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20" styleClass="card"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.bookcradle.admin.AddBookViewController"
+      stylesheets="/styles/AddBook.css">
+
+    <padding>
+        <Insets top="25" right="25" bottom="25" left="25" />
+    </padding>
+
+    <Label text="Add New Book" styleClass="card-title" />
+
+    <GridPane hgap="20" vgap="20">
+        <Label text="Title:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+        <TextField fx:id="titleField" promptText="Enter book title" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="text-field"/>
+
+        <Label text="Author:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+        <TextField fx:id="authorField" promptText="Enter author" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="text-field"/>
+
+        <Label text="ISBN:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+        <TextField fx:id="isbnField" promptText="Enter ISBN" GridPane.rowIndex="2" GridPane.columnIndex="1" styleClass="text-field"/>
+
+        <Label text="Genre:" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+        <TextField fx:id="genreField" promptText="Enter Genre" GridPane.rowIndex="3" GridPane.columnIndex="1" styleClass="text-field"/>
+
+        <Label text="Year:" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+        <TextField fx:id="yearField" promptText="Enter Year" GridPane.rowIndex="4" GridPane.columnIndex="1" styleClass="text-field"/>
+
+        <Label text="Due Date:" GridPane.rowIndex="5" GridPane.columnIndex="0" />
+        <DatePicker fx:id="dueDateField" GridPane.rowIndex="5" GridPane.columnIndex="1" styleClass="date-picker"/>
+    </GridPane>
+
+    <Button text="Add Book" onAction="#handleAddBook" styleClass="btn-primary" />
+</VBox>
