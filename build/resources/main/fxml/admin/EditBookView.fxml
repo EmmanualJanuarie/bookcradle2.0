@@ -27,6 +27,13 @@
 
         <Label text="Due Date:" GridPane.rowIndex="3" GridPane.columnIndex="0" />
         <DatePicker fx:id="dueDateField" GridPane.rowIndex="3" GridPane.columnIndex="1" styleClass="date-picker"/>
+
+        <Label text="Genre:" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+        <TextField fx:id="genreField" GridPane.rowIndex="4" GridPane.columnIndex="1" styleClass="text-field"/>
+
+        <Label text="Year:" GridPane.rowIndex="5" GridPane.columnIndex="0" />
+        <TextField fx:id="yearField" GridPane.rowIndex="5" GridPane.columnIndex="1" styleClass="text-field"/>
+
     </GridPane>
 
     <HBox spacing="20" alignment="CENTER">
