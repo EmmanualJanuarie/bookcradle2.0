@@ -17,7 +17,7 @@
     <Label text="Book Library" styleClass="card-title" />
 
     <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="carousel">
-        <FlowPane fx:id="bookCardsPane" hgap="20" vgap="20" prefWrapLength="800" />
+        <FlowPane fx:id="bookCardsPane" hgap="20" vgap="20" prefWrapLength="700" />
     </ScrollPane>
 
 
