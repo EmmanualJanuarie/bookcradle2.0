@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage; // Added import for Stage
@@ -26,6 +27,8 @@ public class AuthController {
     private TextField visiblePasswordField;
     @FXML
     private Button authButton;
+    @FXML
+    private VBox signupFieldsBox;
     @FXML
     private Label messageLabel;
     @FXML
@@ -70,7 +73,7 @@ public class AuthController {
             if (newValue != null && !newValue.equals(oldValue)) {
                 int strength = calculatePasswordStrength(newValue);
                 Rectangle strengthIndicator = (Rectangle) passwordStrengthBar.getChildren().get(0);
-                
+
                 if (strength <= 33) {
                     strengthIndicator.setFill(Color.RED);
                 } else if (strength <= 66) {
@@ -85,7 +88,7 @@ public class AuthController {
                 passwordField.setText(newValue);
                 int strength = calculatePasswordStrength(newValue);
                 Rectangle strengthIndicator = (Rectangle) passwordStrengthBar.getChildren().get(0);
-                
+
                 if (strength <= 33) {
                     strengthIndicator.setFill(Color.RED);
                 } else if (strength <= 66) {
@@ -128,18 +131,27 @@ public class AuthController {
 
     private int calculatePasswordStrength(String password) {
         int score = 0;
-        if (password == null || password.isEmpty()) return 0;
+        if (password == null || password.isEmpty())
+            return 0;
 
-        if (password.length() >= 8) score += 25;
-        if (password.length() >= 12) score += 25;
+        if (password.length() >= 8)
+            score += 25;
+        if (password.length() >= 12)
+            score += 25;
 
-        if (password.matches(".*[A-Z].*")) score += 15;
-        if (password.matches(".*[a-z].*")) score += 15;
-        if (password.matches(".*[0-9].*")) score += 15;
-        if (password.matches(".*[!@#$%^&*()-_=+].*")) score += 15;
+        if (password.matches(".*[A-Z].*"))
+            score += 15;
+        if (password.matches(".*[a-z].*"))
+            score += 15;
+        if (password.matches(".*[0-9].*"))
+            score += 15;
+        if (password.matches(".*[!@#$%^&*()-_=+].*"))
+            score += 15;
 
-        if (password.matches(".*(.+)\\1.*")) score -= 10;
-        if (password.length() > 16) score = Math.min(100, score + 10);
+        if (password.matches(".*(.+)\\1.*"))
+            score -= 10;
+        if (password.length() > 16)
+            score = Math.min(100, score + 10);
 
         return Math.min(100, Math.max(0, score));
     }
@@ -175,12 +187,18 @@ public class AuthController {
     private void updateUIForMode() {
         boolean showExtraFields = (currentMode == Mode.USER_SIGNUP);
 
+        // Show/hide the entire VBox container for sign-up fields
+        signupFieldsBox.setVisible(showExtraFields);
+        signupFieldsBox.setManaged(showExtraFields);
+
+        // You can still optionally control individual fields if you want
         nameField.setVisible(showExtraFields);
         nameField.setManaged(showExtraFields);
         surnameField.setVisible(showExtraFields);
         surnameField.setManaged(showExtraFields);
         emailField.setVisible(showExtraFields);
         emailField.setManaged(showExtraFields);
+
         generatePasswordButton.setVisible(showExtraFields);
         generatePasswordButton.setManaged(showExtraFields);
         passwordStrengthBar.setVisible(showExtraFields);
@@ -194,8 +212,11 @@ public class AuthController {
                 messageLink.setText("Sign In as User");
                 adminPromptLabel.setVisible(false);
                 adminPromptLink.setVisible(false);
+                generatePasswordButton.setVisible(false);
+                generatePasswordButton.setManaged(false);
                 usernameField.setVisible(true);
                 usernameField.setManaged(true);
+                usernameField.setPromptText("Username");
                 break;
 
             case USER_LOGIN:
@@ -203,11 +224,14 @@ public class AuthController {
                 authButton.setText("Sign In");
                 messageLabel.setText("Not a registered user?");
                 messageLink.setText("Sign Up");
-                usernameField.setText("Email");
                 adminPromptLabel.setVisible(true);
                 adminPromptLink.setVisible(true);
                 usernameField.setVisible(true);
                 usernameField.setManaged(true);
+                usernameField.setPromptText("Email");
+                generatePasswordButton.setVisible(false);
+                generatePasswordButton.setManaged(false);
+                usernameField.clear();
                 break;
 
             case USER_SIGNUP:
@@ -217,6 +241,8 @@ public class AuthController {
                 messageLink.setText("Sign In");
                 adminPromptLabel.setVisible(true);
                 adminPromptLink.setVisible(true);
+                generatePasswordButton.setVisible(true);
+                generatePasswordButton.setManaged(true);
                 usernameField.setVisible(false);
                 usernameField.setManaged(false);
                 break;
