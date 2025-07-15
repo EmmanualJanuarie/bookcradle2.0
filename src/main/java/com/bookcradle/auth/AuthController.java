@@ -7,9 +7,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
-
+import javafx.scene.layout.HBox;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage; // Added import for Stage
 import java.io.*;
+import java.security.SecureRandom;
 
 public class AuthController {
 
@@ -20,21 +23,31 @@ public class AuthController {
     @FXML
     private PasswordField passwordField;
     @FXML
+    private TextField visiblePasswordField;
+    @FXML
     private Button authButton;
     @FXML
     private Label messageLabel;
     @FXML
     private Hyperlink messageLink;
     @FXML
-    private Label adminPromptLabel;
-    @FXML
     private Hyperlink adminPromptLink;
+    @FXML
+    private Label adminPromptLabel;
     @FXML
     private TextField nameField;
     @FXML
     private TextField surnameField;
     @FXML
     private TextField emailField;
+    @FXML
+    private Button generatePasswordButton;
+    @FXML
+    private HBox passwordStrengthBar;
+    @FXML
+    private Button togglePasswordButton;
+
+    private boolean isPasswordVisible = false;
 
     private enum Mode {
         ADMIN_SIGNIN, USER_LOGIN, USER_SIGNUP
@@ -45,6 +58,117 @@ public class AuthController {
     @FXML
     private void initialize() {
         updateUIForMode();
+        setupPasswordStrengthListener();
+        Rectangle strengthIndicator = new Rectangle(100, 10);
+        strengthIndicator.setFill(Color.GRAY);
+        passwordStrengthBar.getChildren().add(strengthIndicator);
+    }
+
+    @SuppressWarnings("unused") // Suppress warning for unused 'obs' parameter
+    private void setupPasswordStrengthListener() {
+        passwordField.textProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue != null && !newValue.equals(oldValue)) {
+                int strength = calculatePasswordStrength(newValue);
+                Rectangle strengthIndicator = (Rectangle) passwordStrengthBar.getChildren().get(0);
+                
+                if (strength <= 33) {
+                    strengthIndicator.setFill(Color.RED);
+                } else if (strength <= 66) {
+                    strengthIndicator.setFill(Color.YELLOW);
+                } else {
+                    strengthIndicator.setFill(Color.GREEN);
+                }
+            }
+        });
+        visiblePasswordField.textProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue != null && !newValue.equals(oldValue)) {
+                passwordField.setText(newValue);
+                int strength = calculatePasswordStrength(newValue);
+                Rectangle strengthIndicator = (Rectangle) passwordStrengthBar.getChildren().get(0);
+                
+                if (strength <= 33) {
+                    strengthIndicator.setFill(Color.RED);
+                } else if (strength <= 66) {
+                    strengthIndicator.setFill(Color.YELLOW);
+                } else {
+                    strengthIndicator.setFill(Color.GREEN);
+                }
+            }
+        });
+    }
+
+    private String generateStrongPassword(int length) {
+        String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String lower = "abcdefghijklmnopqrstuvwxyz";
+        String numbers = "0123456789";
+        String special = "!@#$%^&*()-_=+";
+        String allChars = upper + lower + numbers + special;
+        SecureRandom random = new SecureRandom();
+        StringBuilder password = new StringBuilder();
+
+        password.append(upper.charAt(random.nextInt(upper.length())));
+        password.append(lower.charAt(random.nextInt(lower.length())));
+        password.append(numbers.charAt(random.nextInt(numbers.length())));
+        password.append(special.charAt(random.nextInt(special.length())));
+
+        for (int i = 4; i < length; i++) {
+            password.append(allChars.charAt(random.nextInt(allChars.length())));
+        }
+
+        char[] passwordArray = password.toString().toCharArray();
+        for (int i = passwordArray.length - 1; i > 0; i--) {
+            int j = random.nextInt(i + 1);
+            char temp = passwordArray[i];
+            passwordArray[i] = passwordArray[j];
+            passwordArray[j] = temp;
+        }
+
+        return new String(passwordArray);
+    }
+
+    private int calculatePasswordStrength(String password) {
+        int score = 0;
+        if (password == null || password.isEmpty()) return 0;
+
+        if (password.length() >= 8) score += 25;
+        if (password.length() >= 12) score += 25;
+
+        if (password.matches(".*[A-Z].*")) score += 15;
+        if (password.matches(".*[a-z].*")) score += 15;
+        if (password.matches(".*[0-9].*")) score += 15;
+        if (password.matches(".*[!@#$%^&*()-_=+].*")) score += 15;
+
+        if (password.matches(".*(.+)\\1.*")) score -= 10;
+        if (password.length() > 16) score = Math.min(100, score + 10);
+
+        return Math.min(100, Math.max(0, score));
+    }
+
+    @FXML
+    private void onGeneratePasswordClicked() {
+        String newPassword = generateStrongPassword(12);
+        passwordField.setText(newPassword);
+        visiblePasswordField.setText(newPassword);
+    }
+
+    @FXML
+    private void onTogglePasswordVisibility() {
+        isPasswordVisible = !isPasswordVisible;
+        if (isPasswordVisible) {
+            visiblePasswordField.setText(passwordField.getText());
+            passwordField.setVisible(false);
+            passwordField.setManaged(false);
+            visiblePasswordField.setVisible(true);
+            visiblePasswordField.setManaged(true);
+            togglePasswordButton.setText("👁️‍🗨️");
+        } else {
+            passwordField.setText(visiblePasswordField.getText());
+            visiblePasswordField.setVisible(false);
+            visiblePasswordField.setManaged(false);
+            passwordField.setVisible(true);
+            passwordField.setManaged(true);
+            togglePasswordButton.setText("👁️");
+        }
     }
 
     @FXML
@@ -57,6 +181,10 @@ public class AuthController {
         surnameField.setManaged(showExtraFields);
         emailField.setVisible(showExtraFields);
         emailField.setManaged(showExtraFields);
+        generatePasswordButton.setVisible(showExtraFields);
+        generatePasswordButton.setManaged(showExtraFields);
+        passwordStrengthBar.setVisible(showExtraFields);
+        passwordStrengthBar.setManaged(showExtraFields);
 
         switch (currentMode) {
             case ADMIN_SIGNIN:
@@ -96,6 +224,7 @@ public class AuthController {
 
         usernameField.clear();
         passwordField.clear();
+        visiblePasswordField.clear();
         nameField.clear();
         surnameField.clear();
         emailField.clear();
@@ -136,7 +265,7 @@ public class AuthController {
 
             case USER_LOGIN:
                 if (isUserValid(user, hashedPass)) {
-                    loadUserDashboard(user); // pass logged-in email here
+                    loadUserDashboard(user);
                 }
                 break;
 
@@ -207,7 +336,6 @@ public class AuthController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/user/UserDashboard.fxml"));
             Parent dashboardRoot = loader.load();
 
-            // Pass email to UserController
             UserController controller = loader.getController();
             controller.setLoggedInEmail(userEmail);
 

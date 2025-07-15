@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
 <StackPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.bookcradle.auth.AuthController" styleClass="root">
@@ -13,7 +13,17 @@
         <TextField fx:id="nameField" promptText="First Name" styleClass="input" visible="false" managed="false"/>
         <TextField fx:id="surnameField" promptText="Surname" styleClass="input" visible="false" managed="false"/>
         <TextField fx:id="emailField" promptText="Email" styleClass="input" visible="false" managed="false"/>
-        <PasswordField fx:id="passwordField" promptText="Password" styleClass="input"/>
+        
+        <HBox spacing="5" alignment="CENTER_LEFT">
+            <PasswordField fx:id="passwordField" promptText="Password" styleClass="input" HBox.hgrow="ALWAYS"/>
+            <TextField fx:id="visiblePasswordField" promptText="Password" styleClass="input" visible="false" managed="false"/>
+            <Button fx:id="togglePasswordButton" text="👁️" onAction="#onTogglePasswordVisibility" styleClass="btn-eye"/>
+            <Button fx:id="generatePasswordButton" text="Generate" onAction="#onGeneratePasswordClicked" styleClass="btn-secondary"/>
+        </HBox>
+        
+        <HBox fx:id="passwordStrengthBar" alignment="CENTER" spacing="5">
+            <Rectangle fx:id="strengthIndicator" width="100" height="10" fill="GRAY"/>
+        </HBox>
 
         <Button fx:id="authButton" text="Sign In" onAction="#handleAuth" styleClass="btn-primary"/>
 
