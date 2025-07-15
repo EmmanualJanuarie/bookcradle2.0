@@ -5,3 +5,6 @@ janedoe@gmail.com,Harry Potter and the Golden Snitch,2025-07-14,,0.0
 janedoe@gmail.com,Harry Potter and the Golden Snitch,2025-06-30,2025-07-14,0.0
 janedoe@gmail.com,Harry Potter and the Golden Snitch,2025-07-14,,0.0
 janedoe@gmail.com,Harry Potter and the Golden Snitch,2025-06-30,2025-07-14,0.0
+johndoe@gmail.com,Harry Potter and the Golden Snitch,2025-07-01,2025-07-15,0.0
+johndoe@gmail.com,Harry Potter and the Golden Snitch,2025-07-15,,0.0
+johndoe@gmail.com,Harry Potter and the Golden Snitch,2025-07-01,2025-07-15,0.0
