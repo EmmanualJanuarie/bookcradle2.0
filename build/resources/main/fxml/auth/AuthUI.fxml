@@ -6,27 +6,40 @@
 <?import javafx.scene.text.*?>
 
 <StackPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.bookcradle.auth.AuthController" styleClass="root">
-    <VBox alignment="CENTER" spacing="20" styleClass="card">
+    <VBox alignment="CENTER" spacing="20" styleClass="card" maxWidth="400">
+        <!-- Title -->
         <Label fx:id="titleLabel" text="Admin Sign In" styleClass="title"/>
 
+        <!-- Username -->
         <TextField fx:id="usernameField" promptText="Username" styleClass="input"/>
-        <TextField fx:id="nameField" promptText="First Name" styleClass="input" visible="false" managed="false"/>
-        <TextField fx:id="surnameField" promptText="Surname" styleClass="input" visible="false" managed="false"/>
-        <TextField fx:id="emailField" promptText="Email" styleClass="input" visible="false" managed="false"/>
-        
-        <HBox spacing="5" alignment="CENTER_LEFT">
-            <PasswordField fx:id="passwordField" promptText="Password" styleClass="input" HBox.hgrow="ALWAYS"/>
-            <TextField fx:id="visiblePasswordField" promptText="Password" styleClass="input" visible="false" managed="false"/>
-            <Button fx:id="togglePasswordButton" text="👁️" onAction="#onTogglePasswordVisibility" styleClass="btn-eye"/>
-            <Button fx:id="generatePasswordButton" text="Generate" onAction="#onGeneratePasswordClicked" styleClass="btn-secondary"/>
-        </HBox>
-        
-        <HBox fx:id="passwordStrengthBar" alignment="CENTER" spacing="5">
-            <Rectangle fx:id="strengthIndicator" width="100" height="10" fill="GRAY"/>
-        </HBox>
 
+        <!-- Sign-Up Only Inputs -->
+        <VBox fx:id="signupFieldsBox" spacing="10" visible="false" managed="false">
+            <TextField fx:id="nameField" promptText="First Name" styleClass="input"/>
+            <TextField fx:id="surnameField" promptText="Surname" styleClass="input"/>
+            <TextField fx:id="emailField" promptText="Email" styleClass="input"/>
+        </VBox>
+
+        <!-- Password Section -->
+        <VBox spacing="8" alignment="CENTER">
+            <!-- Password + Visibility + Generate -->
+            <HBox spacing="5" alignment="CENTER_LEFT">
+                <PasswordField fx:id="passwordField" promptText="Password" styleClass="input" HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="visiblePasswordField" promptText="Password" styleClass="input" visible="false" managed="false" HBox.hgrow="ALWAYS"/>
+                <Button fx:id="togglePasswordButton" text="👁️" onAction="#onTogglePasswordVisibility" styleClass="btn-eye"/>
+                <Button fx:id="generatePasswordButton" text="Generate" onAction="#onGeneratePasswordClicked" styleClass="btn-secondary" visible="false" managed="false"/>
+            </HBox>
+
+            <!-- Password Strength -->
+            <HBox fx:id="passwordStrengthBar" alignment="CENTER" spacing="5" visible="false" managed="false">
+                <Rectangle fx:id="strengthIndicator" width="100" height="10" fill="GRAY"/>
+            </HBox>
+        </VBox>
+
+        <!-- Submit Button -->
         <Button fx:id="authButton" text="Sign In" onAction="#handleAuth" styleClass="btn-primary"/>
 
+        <!-- Message Section -->
         <HBox spacing="5" alignment="CENTER">
             <Label fx:id="messageLabel" text="Already a registered user?" />
             <Hyperlink fx:id="messageLink" text="Sign In as User" onAction="#onMessageLinkClicked"/>
