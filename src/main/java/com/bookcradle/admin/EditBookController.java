@@ -50,13 +50,22 @@ public class EditBookController {
         String newAuthor = authorField.getText();
         String newIsbn = isbnField.getText();
         String newGenre = genreField.getText();
-        int newYear = Integer.parseInt(yearField.getText());
-        LocalDate newDueDate = dueDateField.getValue();
 
-        if (newTitle.isEmpty() || newAuthor.isEmpty() || newIsbn.isEmpty() || newDueDate == null) {
+        if (newTitle.isEmpty() || newAuthor.isEmpty() || newIsbn.isEmpty() || newGenre.isEmpty()
+                || dueDateField.getValue() == null) {
             showAlert("Error", "All fields must be filled out.");
             return;
         }
+
+        int newYear;
+        try {
+            newYear = Integer.parseInt(yearField.getText().trim());
+        } catch (NumberFormatException e) {
+            showAlert("Error", "Year must be a valid number.");
+            return;
+        }
+
+        LocalDate newDueDate = dueDateField.getValue();
 
         Book updatedBook = new Book(newTitle, newAuthor, newIsbn, newGenre, newYear, newDueDate,
                 originalBook.getLateFee());
@@ -64,7 +73,6 @@ public class EditBookController {
 
         showAlert("Success", "Book updated successfully!");
 
-        // Close window
         Stage stage = (Stage) titleField.getScene().getWindow();
         stage.close();
     }
