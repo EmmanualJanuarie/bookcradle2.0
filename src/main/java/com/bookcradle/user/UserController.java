@@ -31,7 +31,7 @@ public class UserController {
     @FXML
     private VBox borrowedBooksVBox;
     @FXML
-    private Pane availableBooksHBox;
+    private FlowPane availableBooksHBox;
     @FXML
     private TextField isbnSearchBar;
 
@@ -250,8 +250,11 @@ public class UserController {
         }
 
         for (Book book : books) {
-            VBox card = new VBox(10);
+            VBox card = new VBox(25);
             card.getStyleClass().add("book-card");
+            card.setPrefWidth(420);
+            card.setMinWidth(420);
+            card.setMaxWidth(420);
 
             Label titleLabel = new Label("Title: " + book.getTitle());
             titleLabel.getStyleClass().add("book-title");
