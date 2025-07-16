@@ -31,9 +31,12 @@ public class UserController {
     @FXML
     private VBox borrowedBooksVBox;
     @FXML
-    private Pane availableBooksHBox; // works for HBox or FlowPane
+    private Pane availableBooksHBox;
     @FXML
     private TextField isbnSearchBar;
+
+    @FXML
+    private ListView<String> historyListView;
 
     @FXML
     private TextField genreSearchBar;
@@ -74,7 +77,29 @@ public class UserController {
         updateBorrowedBooksLabel();
         checkLateFee();
         searchBooks();
+        loadUserHistory();
     }
+
+    private void loadUserHistory() {
+    historyListView.getItems().clear();
+    String email = currentUser.getEmail();
+    File file = new File("user_history/" + email + "_history.txt");
+
+    if (file.exists()) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                historyListView.getItems().add(line);
+            }
+        } catch (IOException e) {
+            historyListView.getItems().add("⚠️ Could not load history.");
+            e.printStackTrace();
+        }
+    } else {
+        historyListView.getItems().add("No history found.");
+    }
+}
+
 
     private void loadUserInfo(String email) {
         try (BufferedReader reader = new BufferedReader(new FileReader("SignUp_data.txt"))) {
@@ -316,17 +341,35 @@ public class UserController {
         checkLateFee();
     }
 
-    private void logToFile(String userEmail, String bookTitle, LocalDate borrowDate, LocalDate returnDate,
-            double lateFee) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("LibraryData.txt", true))) {
-            String line = userEmail + "," + bookTitle + "," + borrowDate + "," + (returnDate == null ? "" : returnDate)
-                    + "," + lateFee;
-            writer.write(line);
-            writer.newLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+   private void logToFile(String userEmail, String bookTitle, LocalDate borrowDate, LocalDate returnDate, double lateFee) {
+    // Global log
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter("LibraryData.txt", true))) {
+        String line = userEmail + "," + bookTitle + "," + borrowDate + "," + (returnDate == null ? "" : returnDate) + "," + lateFee;
+        writer.write(line);
+        writer.newLine();
+    } catch (IOException e) {
+        e.printStackTrace();
     }
+
+    // Per-user history log
+    try {
+        File dir = new File("user_history");
+        if (!dir.exists()) dir.mkdir();
+
+        File file = new File(dir, userEmail + "_history.txt");
+        BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
+
+        String action = (returnDate == null) ? "Borrowed" : "Returned";
+        LocalDate date = (returnDate == null) ? borrowDate : returnDate;
+        writer.write(date + " | " + action + " | " + bookTitle);
+        writer.newLine();
+        writer.close();
+
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+
 
     @FXML
     private void handleLogout(ActionEvent event) {
