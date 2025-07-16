@@ -83,12 +83,12 @@
                     </HBox>
                 </VBox>
 
-                <ScrollPane fitToWidth="true" prefHeight="300" style="-fx-background-color:transparent;" hbarPolicy="AS_NEEDED" vbarPolicy="NEVER">
-                    <HBox fx:id="availableBooksHBox" spacing="20">
+                <ScrollPane fitToWidth="false" prefHeight="300" style="-fx-background-color:transparent;" hbarPolicy="AS_NEEDED" vbarPolicy="NEVER" prefWidth="600">
+                    <FlowPane fx:id="availableBooksHBox" hgap="20" vgap="20" prefWrapLength="1380">
                         <padding>
-                            <Insets top="10" right="10" bottom="10" left="10"/>
+                            <Insets top="10" right="10" bottom="10" left="10" />
                         </padding>
-                    </HBox>
+                    </FlowPane>
                 </ScrollPane>
 
             </VBox>
