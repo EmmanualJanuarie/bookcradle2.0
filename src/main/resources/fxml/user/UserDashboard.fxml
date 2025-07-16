@@ -51,6 +51,9 @@
                     <Label fx:id="lateFeeLabel" text="R0.00" styleClass="late-fee-info"/>
                     <Button fx:id="payLateFeeButton" text="Pay Late Fee" onAction="#handlePayLateFee" styleClass="btn-pay-late-fee"/>
                 </HBox>
+
+                <Label text="Borrow/Return History" styleClass="section-subtitle" wrapText="true" maxWidth="Infinity"/>
+                <ListView fx:id="historyListView" prefHeight="200" />
             </VBox>
         </VBox>
 
