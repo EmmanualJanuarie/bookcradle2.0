@@ -1,1 +1,1 @@
-johndoe@gmail.com,John,Doe,0,
+johndoe@gmail.com,John,Doe,2,Macbeth;To Kill a Mockingbird
