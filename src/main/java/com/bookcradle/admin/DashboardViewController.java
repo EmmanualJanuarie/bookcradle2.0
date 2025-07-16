@@ -3,6 +3,7 @@ package com.bookcradle.admin;
 import com.bookcradle.models.Book;
 import com.bookcradle.services.BookService;
 
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
@@ -10,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -24,13 +26,42 @@ public class DashboardViewController {
     @javafx.fxml.FXML
     private FlowPane bookCardsPane;
 
+    @FXML private TextField isbnSearchBar;
+    @FXML private TextField titleSearchBar;
+    @FXML private TextField authorSearchBar;
+    @FXML private TextField genreSearchBar;
+    @FXML private TextField yearSearchBar;
+
     private BookService bookService = new BookService();
 
     @javafx.fxml.FXML
     public void initialize() {
         List<Book> books = bookService.getAllBooks();
+        titleSearchBar.setOnKeyReleased(e -> handleSearch());
         updateBookList(books);
     }
+
+    @FXML
+    private void handleSearch() {
+        String isbn = isbnSearchBar.getText().trim();
+        String title = titleSearchBar.getText().trim();
+        String author = authorSearchBar.getText().trim();
+        String genre = genreSearchBar.getText().trim();
+        String yearText = yearSearchBar.getText().trim();
+
+        Integer year = null;
+        if (!yearText.isEmpty()) {
+            try {
+                year = Integer.parseInt(yearText);
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid year input: " + yearText);
+            }
+        }
+
+        List<Book> results = bookService.searchBooks(isbn, title, author, genre, year);
+        updateBookList(results);
+    }
+
 
     private void updateBookList(List<Book> books) {
         bookCardsPane.getChildren().clear();
@@ -39,7 +70,7 @@ public class DashboardViewController {
             VBox card = new VBox(10);
             card.getStyleClass().add("book-card");
             card.setPadding(new Insets(15));
-            card.setPrefWidth(260);
+            card.setPrefWidth(660);
 
             Label title = new Label(book.getTitle());
             title.getStyleClass().add("book-title");
