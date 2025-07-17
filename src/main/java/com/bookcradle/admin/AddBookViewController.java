@@ -4,6 +4,7 @@ import com.bookcradle.models.Book;
 import com.bookcradle.services.BookService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 
@@ -11,7 +12,7 @@ import java.time.LocalDate;
 
 public class AddBookViewController {
 
-    private BookService bookService = new BookService();
+    private final BookService bookService = new BookService();
 
     @FXML
     private TextField titleField;
@@ -25,6 +26,23 @@ public class AddBookViewController {
     private TextField yearField;
     @FXML
     private DatePicker dueDateField;
+
+    @FXML
+    public void initialize() {
+        restrictDueDateToCurrentYear();
+    }
+
+    private void restrictDueDateToCurrentYear() {
+        int currentYear = LocalDate.now().getYear();
+
+        dueDateField.setDayCellFactory(_ -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setDisable(empty || date == null || date.getYear() != currentYear);
+            }
+        });
+    }
 
     @FXML
     public void handleAddBook() {
@@ -41,6 +59,11 @@ public class AddBookViewController {
             return;
         }
 
+        if (dueDate.getYear() != LocalDate.now().getYear()) {
+            showAlert("Error", "Due date must be within the current year.");
+            return;
+        }
+
         int year;
         try {
             year = Integer.parseInt(yearText);
@@ -53,7 +76,6 @@ public class AddBookViewController {
         bookService.addBook(book);
 
         showAlert("Success", "Book added successfully!");
-
         clearFields();
     }
 
