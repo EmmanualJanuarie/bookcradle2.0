@@ -1,5 +1,5 @@
 banzidube@capaciti.org.za,That witch has horns,2025-07-03,2025-07-10,0.0,false
-johndoe@gmail.com,To Kill a Mockingbird,2025-07-16,,0.0,false
-email=johndoe@gmail.com,books=Macbeth;To Kill a Mockingbird
+johndoe@gmail.com,To Kill a Mockingbird,2025-07-22,2025-07-17,0.0,false
+email=johndoe@gmail.com,books=Macbeth
 janedoe@gmail.com,Harry Potter and the Golden Snitch,2025-07-14,2025-07-14,0.0,false
 email=janedoe@gmail.com,books=
