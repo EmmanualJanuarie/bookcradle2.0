@@ -1,0 +1,57 @@
+/* === Payment Form Styling === */
+
+.root {
+    -fx-background-color: #f9f9f9;
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-padding: 20px;
+}
+
+.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333;
+}
+
+.text-field {
+    -fx-pref-width: 250px;
+    -fx-font-size: 14px;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 5 10 5 10;
+    -fx-background-color: white;
+}
+
+.text-field:focused {
+    -fx-border-color: #0078d7;
+    -fx-effect: dropshadow(one-pass-box, #0078d7, 4, 0.3, 0, 0);
+}
+
+.button {
+    -fx-background-color: #0078d7;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 6 16 6 16;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.1), 4, 0.3, 0, 2);
+}
+
+.button:hover {
+    -fx-background-color: #005fa3;
+}
+
+.button:cancel {
+    -fx-background-color: #aaa;
+}
+
+#errorLabel {
+    -fx-text-fill: #cc0000;
+    -fx-font-weight: bold;
+    -fx-padding: 4;
+}
+
+#successLabel {
+    -fx-text-fill: #28a745;
+    -fx-font-weight: bold;
+    -fx-padding: 4;
+}
