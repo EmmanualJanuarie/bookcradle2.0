@@ -81,16 +81,16 @@ public class Book {
         this.year = year;
     }
 
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
+
     public void setLateFeePaid(boolean paid) {
         this.lateFeePaid = paid;
     }
 
     public void setReturned(boolean returned) {
         this.isReturned = returned;
-    }
-
-    public void setDueDate(LocalDate dueDate) {
-        this.dueDate = dueDate;
     }
 
     public void setReturnedDate(LocalDate returnedDate) {
