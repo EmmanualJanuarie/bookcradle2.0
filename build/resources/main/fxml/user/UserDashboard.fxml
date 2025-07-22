@@ -66,7 +66,26 @@
                     <Insets top="25" right="25" bottom="25" left="25"/>
                 </padding>
 
-                <Label text="Available Books to Borrow" styleClass="section-title" wrapText="true" maxWidth="Infinity"/>
+                <!-- 🔔 Title with Notification Bell -->
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="Available Books to Borrow" styleClass="section-title" />
+                    <Region fx:id="spacerRegion" HBox.hgrow="ALWAYS"/>
+                    <StackPane fx:id="notificationBell" onMouseClicked="#handleNotificationClick" styleClass="notification-container">
+                        <Label text="🔔" styleClass="notification-icon"/>
+                        <Label fx:id="notificationBadge"
+                        text=""
+                        visible="false"
+                        styleClass="notification-badge"
+                        prefWidth="10"
+                        prefHeight="10"
+                        maxWidth="10"
+                        maxHeight="10"
+                        minWidth="10"
+                        minHeight="10"
+                        alignment="CENTER"/>
+                        
+                    </StackPane>
+                </HBox>
 
                 <!-- ✅ Full Search Inputs Added -->
                 <VBox spacing="10">
@@ -90,8 +109,8 @@
                         </padding>
                     </FlowPane>
                 </ScrollPane>
-
             </VBox>
+
 
             <!-- Bottom Buttons -->
             <HBox spacing="20" alignment="CENTER">
