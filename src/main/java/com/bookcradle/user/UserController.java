@@ -3,6 +3,9 @@ package com.bookcradle.user;
 import com.bookcradle.models.Book;
 import com.bookcradle.models.User;
 import com.bookcradle.services.BookService;
+
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -34,6 +37,10 @@ public class UserController {
     private FlowPane availableBooksHBox;
     @FXML
     private TextField isbnSearchBar;
+    @FXML
+    private Label notificationBadge;
+    @FXML
+    private StackPane notificationBell;
 
     @FXML
     private ListView<String> historyListView;
@@ -69,6 +76,11 @@ public class UserController {
         yearSearchBar.setOnKeyReleased(this::searchBooks);
     }
 
+    @FXML
+    private void handleNotificationClick() {
+        showOutstandingNotificationIfNeeded();
+    }
+
     public void setLoggedInEmail(String email) {
         loadUserInfo(email);
         loadBorrowedBooks(email);
@@ -78,28 +90,163 @@ public class UserController {
         checkLateFee();
         searchBooks();
         loadUserHistory();
+        updateNotificationBubble();
+        loadBorrowedBooksDetailsFromLibraryData();
+    }
+
+    private void showOutstandingNotificationIfNeeded() {
+        LocalDate today = LocalDate.now();
+        List<Book> borrowedBooks = currentUser.getBorrowedBooks();
+
+        // Filter still borrowed and overdue books
+        List<Book> stillBorrowed = borrowedBooks.stream()
+                .filter(book -> !book.isReturned())
+                .toList();
+
+        List<Book> overdueBooks = stillBorrowed.stream()
+                .filter(book -> book.getDueDate() != null && book.getDueDate().isBefore(today))
+                .toList();
+
+        double totalLateFees = 0;
+        for (Book book : stillBorrowed) {
+            if (book.getDueDate() != null && book.getDueDate().isBefore(today)) {
+                long daysLate = today.toEpochDay() - book.getDueDate().toEpochDay();
+                totalLateFees += daysLate * 20.10;
+            }
+        }
+        for (Book book : borrowedBooks) {
+            if (book.isReturned() && book.getLateFee() > 0 && !book.isLateFeePaid()) {
+                totalLateFees += book.getLateFee();
+            }
+        }
+
+        // Capture in effectively final variables for use inside runLater
+        final List<Book> booksToShow = stillBorrowed;
+        final double feesToShow = totalLateFees;
+
+        Platform.runLater(() -> {
+            StringBuilder message = new StringBuilder();
+            message.append("📚 Books still borrowed:\n");
+            if (booksToShow.isEmpty()) {
+                message.append("  None\n");
+            } else {
+                for (Book book : booksToShow) {
+                    message.append("  • ").append(book.getTitle())
+                            .append(" (Due: ").append(book.getDueDate()).append(")\n");
+                }
+            }
+
+            message.append("\n⚠️ Outstanding (Overdue) books:\n");
+            if (overdueBooks.isEmpty()) {
+                message.append("  None\n");
+            } else {
+                for (Book book : overdueBooks) {
+                    long daysLate = today.toEpochDay() - book.getDueDate().toEpochDay();
+                    message.append("  • ").append(book.getTitle())
+                            .append(" (Due: ").append(book.getDueDate())
+                            .append(", ").append(daysLate).append(" days late)\n");
+                }
+            }
+
+            message.append("\n💳 Total late fees to pay: R").append(String.format("%.2f", feesToShow));
+            message.append(
+                    "\n\nPlease pay your late fees at your nearest library or using the 'Pay Fee' button below.");
+
+            Dialog<ButtonType> dialog = new Dialog<>();
+            dialog.getDialogPane().getStylesheets().add(
+                    getClass().getResource("/styles/UserStyle.css").toExternalForm());
+            dialog.setTitle("Library Notification");
+            dialog.initStyle(StageStyle.TRANSPARENT);
+
+            DialogPane dialogPane = dialog.getDialogPane();
+            dialogPane.setContent(new Label(message.toString()));
+
+            ButtonType payFeeButtonType = new ButtonType("Pay Fee", ButtonBar.ButtonData.OK_DONE);
+            ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.CANCEL_CLOSE);
+            dialogPane.getButtonTypes().addAll(payFeeButtonType, okButtonType);
+
+            dialogPane.setStyle("""
+                        -fx-background-radius: 20;
+                        -fx-border-radius: 20;
+                        -fx-border-color: #cccccc;
+                        -fx-border-width: 2px;
+                        -fx-background-color: rgba(255, 255, 255, 0.95);
+                        -fx-font-family: 'SF Pro Text', 'Segoe UI', sans-serif;
+                        -fx-font-size: 14px;
+                        -fx-padding: 20;
+                    """);
+            ((Label) dialogPane.getContent()).setStyle("""
+                        -fx-text-fill: #333;
+                        -fx-wrap-text: true;
+                        -fx-font-size: 14px;
+                        -fx-line-spacing: 4px;
+                    """);
+
+            Optional<ButtonType> result = dialog.showAndWait();
+            if (result.isPresent() && result.get() == payFeeButtonType) {
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/user/PaymentForm.fxml"));
+                    System.out.println("FXML URL: " + loader);
+                    Parent paymentRoot = loader.load();
+
+                    PaymentController controller = loader.getController();
+                    controller.setCurrentUser(currentUser);
+
+                    Stage paymentStage = new Stage();
+                    paymentStage.setTitle("Pay Late Fees");
+                    paymentStage.setScene(new Scene(paymentRoot));
+                    paymentStage.initStyle(StageStyle.UTILITY);
+
+                    paymentStage.setOnHidden(_ -> {
+                        saveBorrowedBooks();
+                        updateBorrowedBooksLabel();
+                        checkLateFee();
+                        updateNotificationBubble();
+                    });
+
+                    paymentStage.show();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void updateNotificationBubble() {
+        boolean hasBorrowedBooks = currentUser.getBorrowedBooks().stream()
+                .anyMatch(book -> !book.isReturned());
+
+        boolean hasOverdue = currentUser.getBorrowedBooks().stream()
+                .anyMatch(book -> !book.isReturned() && book.getDueDate() != null
+                        && book.getDueDate().isBefore(LocalDate.now()));
+
+        boolean hasLateFees = currentUser.getBorrowedBooks().stream()
+                .anyMatch(book -> book.getLateFee() > 0 && !book.isLateFeePaid());
+
+        boolean shouldShowBadge = hasBorrowedBooks || hasOverdue || hasLateFees;
+        notificationBadge.setVisible(shouldShowBadge);
     }
 
     private void loadUserHistory() {
-    historyListView.getItems().clear();
-    String email = currentUser.getEmail();
-    File file = new File("user_history/" + email + "_history.txt");
+        historyListView.getItems().clear();
+        String email = currentUser.getEmail();
+        File file = new File("user_history/" + email + "_history.txt");
 
-    if (file.exists()) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                historyListView.getItems().add(line);
+        if (file.exists()) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    historyListView.getItems().add(line);
+                }
+            } catch (IOException e) {
+                historyListView.getItems().add("⚠️ Could not load history.");
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            historyListView.getItems().add("⚠️ Could not load history.");
-            e.printStackTrace();
+        } else {
+            historyListView.getItems().add("No history found.");
         }
-    } else {
-        historyListView.getItems().add("No history found.");
     }
-}
-
 
     private void loadUserInfo(String email) {
         try (BufferedReader reader = new BufferedReader(new FileReader("SignUp_data.txt"))) {
@@ -116,6 +263,45 @@ public class UserController {
                     }
                     currentUser = new User(name, surname, email, new ArrayList<>());
                     break;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadBorrowedBooksDetailsFromLibraryData() {
+        try (BufferedReader reader = new BufferedReader(new FileReader("LibraryData.txt"))) {
+            String line;
+            List<Book> borrowedBooks = currentUser.getBorrowedBooks();
+
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 5) {
+                    String email = parts[0];
+                    String bookTitle = parts[1];
+                    LocalDate borrowDate = LocalDate.parse(parts[2]);
+                    LocalDate returnDate = parts[3].isEmpty() ? null : LocalDate.parse(parts[3]);
+                    double lateFee = Double.parseDouble(parts[4]);
+
+                    if (email.equals(currentUser.getEmail())) {
+                        for (Book book : borrowedBooks) {
+                            if (book.getTitle().equalsIgnoreCase(bookTitle)) {
+                                // Update book details
+                                if (returnDate == null) {
+                                    book.setReturned(false);
+                                    book.setDueDate(borrowDate.plusDays(14)); // assuming 14 day borrow period
+                                    book.setReturnedDate(null);
+                                } else {
+                                    book.setReturned(true);
+                                    book.setReturnedDate(returnDate);
+                                    book.setDueDate(borrowDate.plusDays(14)); // still set due date
+                                }
+                                book.setLateFee(lateFee);
+                                book.setLateFeePaid(lateFee == 0);
+                            }
+                        }
+                    }
                 }
             }
         } catch (IOException e) {
@@ -193,23 +379,25 @@ public class UserController {
         borrowedBooksVBox.getChildren().clear();
 
         for (Book book : currentUser.getBorrowedBooks()) {
-            HBox bookCard = new HBox(10);
-            bookCard.setStyle(
-                    "-fx-background-color: #f9f9f9; -fx-padding: 12px; -fx-border-radius: 10; -fx-background-radius: 10; -fx-border-color: #ddd;");
-            bookCard.setPrefWidth(480);
+            if (!book.isReturned()) { // <-- add this check here
+                HBox bookCard = new HBox(10);
+                bookCard.setStyle(
+                        "-fx-background-color: #f9f9f9; -fx-padding: 12px; -fx-border-radius: 10; -fx-background-radius: 10; -fx-border-color: #ddd;");
+                bookCard.setPrefWidth(480);
 
-            Label bookLabel = new Label(book.getTitle() + " (Due: " + book.getDueDate() + ")");
-            bookLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #333;");
+                Label bookLabel = new Label(book.getTitle() + " (Due: " + book.getDueDate() + ")");
+                bookLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #333;");
 
-            Region spacer = new Region();
-            HBox.setHgrow(spacer, Priority.ALWAYS);
+                Region spacer = new Region();
+                HBox.setHgrow(spacer, Priority.ALWAYS);
 
-            Button returnButton = new Button("Return Book");
-            returnButton.getStyleClass().add("btn-return-book");
-            returnButton.setOnAction(e -> returnBook(book));
+                Button returnButton = new Button("Return Book");
+                returnButton.getStyleClass().add("btn-return-book");
+                returnButton.setOnAction(e -> returnBook(book));
 
-            bookCard.getChildren().addAll(bookLabel, spacer, returnButton);
-            borrowedBooksVBox.getChildren().add(bookCard);
+                bookCard.getChildren().addAll(bookLabel, spacer, returnButton);
+                borrowedBooksVBox.getChildren().add(bookCard);
+            }
         }
     }
 
@@ -278,7 +466,7 @@ public class UserController {
         if (currentUser.getBorrowedBooks().stream().anyMatch(b -> b.getTitle().equalsIgnoreCase(book.getTitle())))
             return;
 
-        book.setDueDate(LocalDate.now().plusDays(14));
+        book.setDueDate(LocalDate.now().plusDays(10));
         book.setLateFee(0);
         book.setLateFeePaid(false);
         book.setReturned(false);
@@ -290,6 +478,7 @@ public class UserController {
         updateBorrowedBooksLabel();
         checkLateFee();
         searchBooks();
+        updateNotificationBubble();
     }
 
     private void returnBook(Book book) {
@@ -302,7 +491,7 @@ public class UserController {
         double lateFee = 0;
         if (returnDate.isAfter(book.getDueDate())) {
             long daysLate = returnDate.toEpochDay() - book.getDueDate().toEpochDay();
-            lateFee = daysLate * 2.0;
+            lateFee = daysLate * 20.10; // returns late fee of R20.10 for every late book
         }
         book.setLateFee(lateFee);
         book.setLateFeePaid(false);
@@ -313,16 +502,31 @@ public class UserController {
         updateBorrowedBooksLabel();
         checkLateFee();
         searchBooks();
+        updateNotificationBubble();
     }
 
     private void checkLateFee() {
-        double totalLateFee = currentUser.getBorrowedBooks().stream()
-                .filter(book -> !book.isLateFeePaid())
-                .mapToDouble(Book::getLateFee)
-                .sum();
+        LocalDate today = LocalDate.now();
+
+        double totalLateFee = 0;
+
+        for (Book book : currentUser.getBorrowedBooks()) {
+            if (!book.isReturned()) {
+                // Book still borrowed — calculate dynamic late fee if overdue
+                if (book.getDueDate() != null && book.getDueDate().isBefore(today)) {
+                    long daysLate = today.toEpochDay() - book.getDueDate().toEpochDay();
+                    totalLateFee += daysLate * 20.10;
+                }
+            } else {
+                // Book returned — use stored late fee if unpaid
+                if (book.getLateFee() > 0 && !book.isLateFeePaid()) {
+                    totalLateFee += book.getLateFee();
+                }
+            }
+        }
 
         if (totalLateFee > 0) {
-            lateFeeLabel.setText("R" + totalLateFee);
+            lateFeeLabel.setText("R" + String.format("%.2f", totalLateFee));
             lateFeeLabel.setVisible(true);
             payLateFeeButton.setVisible(true);
         } else {
@@ -342,37 +546,54 @@ public class UserController {
         saveBorrowedBooks();
         updateBorrowedBooksLabel();
         checkLateFee();
+        updateNotificationBubble();
     }
 
-   private void logToFile(String userEmail, String bookTitle, LocalDate borrowDate, LocalDate returnDate, double lateFee) {
-    // Global log
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter("LibraryData.txt", true))) {
-        String line = userEmail + "," + bookTitle + "," + borrowDate + "," + (returnDate == null ? "" : returnDate) + "," + lateFee;
-        writer.write(line);
-        writer.newLine();
-    } catch (IOException e) {
-        e.printStackTrace();
+    private void logToFile(String userEmail, String bookTitle, LocalDate borrowDate, LocalDate returnDate,
+            double lateFee) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("LibraryData.txt", true))) {
+            StringBuilder line = new StringBuilder();
+            line.append(userEmail).append(",")
+                    .append(bookTitle).append(",")
+                    .append(borrowDate).append(",")
+                    .append(returnDate != null ? returnDate : "").append(",")
+                    .append(String.format("%.2f", lateFee));
+
+            if (lateFee > 0 && returnDate != null) {
+                line.append(", [PAID]");
+            }
+
+            writer.write(line.toString());
+            writer.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            File dir = new File("user_history");
+            if (!dir.exists())
+                dir.mkdir();
+
+            File file = new File(dir, userEmail + "_history.txt");
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
+                LocalDate date = (returnDate == null) ? borrowDate : returnDate;
+                String entry;
+
+                if (lateFee > 0 && returnDate != null) {
+                    entry = String.format("%s | Paid Late Fee | %s | Amount: R%.2f", date, bookTitle, lateFee);
+                } else {
+                    String action = (returnDate == null) ? "Borrowed" : "Returned";
+                    entry = String.format("%s | %s | %s", date, action, bookTitle);
+                }
+
+                writer.write(entry);
+                writer.newLine();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-
-    // Per-user history log
-    try {
-        File dir = new File("user_history");
-        if (!dir.exists()) dir.mkdir();
-
-        File file = new File(dir, userEmail + "_history.txt");
-        BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
-
-        String action = (returnDate == null) ? "Borrowed" : "Returned";
-        LocalDate date = (returnDate == null) ? borrowDate : returnDate;
-        writer.write(date + " | " + action + " | " + bookTitle);
-        writer.newLine();
-        writer.close();
-
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-}
-
 
     @FXML
     private void handleLogout(ActionEvent event) {
@@ -400,112 +621,104 @@ public class UserController {
         confirmation.setHeaderText("Are you sure you want to delete your account?");
         confirmation.setContentText("This action is permanent and cannot be undone.");
 
-        // Custom buttons
         ButtonType deleteButton = new ButtonType("Delete", ButtonBar.ButtonData.OK_DONE);
         ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
         confirmation.getButtonTypes().setAll(deleteButton, cancelButton);
 
         DialogPane dialogPane = confirmation.getDialogPane();
 
-        // Posh Apple-like CSS
         dialogPane.setStyle("""
-                    -fx-background-radius: 25;
-                    -fx-border-radius: 25;
-                    -fx-border-color: transparent; /* ✨ Removes the border */
-                    -fx-border-color: #e0e0e0;
-                    -fx-border-width: 1.5px;
-                    -fx-background-color: rgba(255, 255, 255, 0.85);
-                    -fx-font-family: 'SF Pro Text', 'Segoe UI', sans-serif;
-                    -fx-font-size: 14px;
-                    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 20, 0, 0, 4);
+                -fx-background-radius: 25;
+                -fx-border-radius: 25;
+                -fx-border-color: transparent; /* ✨ Removes the border */
+                -fx-border-color: #e0e0e0;
+                -fx-border-width: 1.5px;
+                -fx-background-color: rgba(255, 255, 255, 0.85);
+                -fx-font-family: 'SF Pro Text', 'Segoe UI', sans-serif;
+                -fx-font-size: 14px;
+                -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 20, 0, 0, 4);
                 """);
 
-        // Style the Delete button (Red, rounded, bold)
         Node deleteNode = dialogPane.lookupButton(deleteButton);
         if (deleteNode != null) {
             deleteNode.setStyle("""
-                        -fx-background-color: #ff3b30;
-                        -fx-text-fill: white;
-                        -fx-font-weight: bold;
-                        -fx-background-radius: 20;
-                        -fx-padding: 8 20;
-                        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 2);
+                    -fx-background-color: #ff3b30;
+                    -fx-text-fill: white;
+                    -fx-font-weight: bold;
+                    -fx-background-radius: 20;
+                    -fx-padding: 8 20;
+                    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 2);
                     """);
         }
 
-        // Style the Cancel button (Grey, rounded)
         Node cancelNode = dialogPane.lookupButton(cancelButton);
         if (cancelNode != null) {
             cancelNode.setStyle("""
-                        -fx-background-color: #e0e0e0;
-                        -fx-text-fill: #333;
-                        -fx-font-weight: normal;
-                        -fx-background-radius: 20;
-                        -fx-padding: 8 20;
+                    -fx-background-color: #e0e0e0;
+                    -fx-text-fill: #333;
+                    -fx-font-weight: normal;
+                    -fx-background-radius: 20;
+                    -fx-padding: 8 20;
                     """);
         }
 
-        // Add optional icon (Apple-style flair)
         Stage stage = (Stage) dialogPane.getScene().getWindow();
         stage.initStyle(StageStyle.TRANSPARENT);
-        stage.getIcons().clear(); // Optional: set app icon or remove
+        stage.getIcons().clear();
 
-        // Show confirmation
         Optional<ButtonType> result = confirmation.showAndWait();
         if (result.isPresent() && result.get() == deleteButton) {
             String email = currentUser.getEmail();
             deleteUserFromSignUpData(email);
             deleteLineFromFile("UserBooks_data.txt", "email=" + email);
-            handleLogout(event);
+            deleteUserHistory(email);
+
+            Alert success = new Alert(Alert.AlertType.INFORMATION);
+            success.setTitle("Account Deleted");
+            success.setHeaderText(null);
+            success.setContentText("Your account has been deleted successfully.");
+            success.showAndWait();
+
+            handleLogout(null);
         }
     }
 
     private void deleteUserFromSignUpData(String email) {
-        File inputFile = new File("SignUp_data.txt");
-        File tempFile = new File("temp_SignUp_data.txt");
+        deleteLineFromFile("SignUp_data.txt", "email=" + email);
+    }
+
+    private void deleteUserHistory(String email) {
+        File historyFile = new File("user_history/" + email + "_history.txt");
+        if (historyFile.exists()) {
+            historyFile.delete();
+        }
+    }
+
+    private void deleteLineFromFile(String filename, String startsWith) {
+        File inputFile = new File(filename);
+        File tempFile = new File(filename + ".tmp");
 
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
                 BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
 
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (!line.contains("email=" + email)) {
-                    writer.write(line);
-                    writer.newLine();
-                }
+            String currentLine;
+            while ((currentLine = reader.readLine()) != null) {
+                if (currentLine.startsWith(startsWith))
+                    continue;
+                writer.write(currentLine);
+                writer.newLine();
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        if (!inputFile.delete() || !tempFile.renameTo(inputFile)) {
-            System.err.println("Error replacing SignUp_data.txt file.");
+        if (!inputFile.delete()) {
+            System.err.println("Could not delete original file");
+            return;
+        }
+
+        if (!tempFile.renameTo(inputFile)) {
+            System.err.println("Could not rename temp file");
         }
     }
-
-    private void deleteLineFromFile(String fileName, String matchPrefix) {
-        File inputFile = new File(fileName);
-        File tempFile = new File("temp_" + fileName);
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-                BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (!line.startsWith(matchPrefix)) {
-                    writer.write(line);
-                    writer.newLine();
-                }
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (!inputFile.delete() || !tempFile.renameTo(inputFile)) {
-            System.err.println("Error replacing " + fileName);
-        }
-    }
-
 }
