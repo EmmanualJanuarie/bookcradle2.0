@@ -19,3 +19,6 @@ Wuthering Heights,Emily Brontë,9780141439556,Gothic,1847,2025-11-25,0.0
 Les Misérables,Victor Hugo,9780451419439,Historical Fiction,1862,2025-12-02,0.0
 Don Quixote,Miguel de Cervantes,9780060934347,Adventure,1605,2025-12-09,0.0
 The Divine Comedy,Dante Alighieri,9780140448955,Epic Poetry,1320,2025-12-16,0.0
+Hlomu the wife,Dudu Busani,1045,Fictional,2017,2025-12-31,0.0
+Romeo and Julliet,William Shakespear,5691,Romance,1963,2025-06-18,0.0
+Jungle Book,Ethan Locknore,7895461208,Adventure,2001,2025-07-17,0.0
