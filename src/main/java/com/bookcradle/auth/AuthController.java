@@ -2,6 +2,8 @@ package com.bookcradle.auth;
 
 import com.bookcradle.utils.PasswordUtils;
 import com.bookcradle.user.UserController;
+
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -23,6 +25,7 @@ public class AuthController {
     private TextField usernameField;
     @FXML
     private PasswordField passwordField;
+    
     @FXML
     private TextField visiblePasswordField;
     @FXML
@@ -214,6 +217,9 @@ public class AuthController {
                 adminPromptLink.setVisible(false);
                 generatePasswordButton.setVisible(false);
                 generatePasswordButton.setManaged(false);
+                forgotPasswordLink.setVisible(false);
+forgotPasswordLink.setManaged(false);
+
                 usernameField.setVisible(true);
                 usernameField.setManaged(true);
                 usernameField.setPromptText("Username");
@@ -227,6 +233,9 @@ public class AuthController {
                 adminPromptLabel.setVisible(true);
                 adminPromptLink.setVisible(true);
                 usernameField.setVisible(true);
+                forgotPasswordLink.setVisible(true);
+forgotPasswordLink.setManaged(true);
+
                 usernameField.setManaged(true);
                 usernameField.setPromptText("Email");
                 generatePasswordButton.setVisible(false);
@@ -243,6 +252,9 @@ public class AuthController {
                 adminPromptLink.setVisible(true);
                 generatePasswordButton.setVisible(true);
                 generatePasswordButton.setManaged(true);
+                forgotPasswordLink.setVisible(false);
+forgotPasswordLink.setManaged(false);
+
                 usernameField.setVisible(false);
                 usernameField.setManaged(false);
                 break;
@@ -256,7 +268,55 @@ public class AuthController {
         emailField.clear();
     }
 
-    @FXML
+
+@FXML
+private Hyperlink forgotPasswordLink;
+
+@FXML
+private void onForgotPasswordClicked(ActionEvent event) {
+    String email = usernameField.getText().trim();
+
+    if (email.isEmpty()) {
+        messageLabel.setText("Enter your email first.");
+        return;
+    }
+
+    boolean found = false;
+    try (BufferedReader reader = new BufferedReader(new FileReader("SignUp_data.txt"))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            if (line.contains("email=" + email)) {
+                found = true;
+                break;
+            }
+        }
+    } catch (IOException e) {
+        messageLabel.setText("Error reading user data.");
+        e.printStackTrace();
+        return;
+    }
+
+    if (!found) {
+        messageLabel.setText("Email not found.");
+        return;
+    }
+
+    // Load the reset password screen
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/auth/ResetPassword.fxml"));
+        Parent root = loader.load();
+
+        Stage stage = (Stage) forgotPasswordLink.getScene().getWindow();
+        stage.setScene(new Scene(root));
+        stage.setTitle("Reset Password");
+        stage.show();
+    } catch (IOException e) {
+        e.printStackTrace();
+        messageLabel.setText("Error loading reset screen.");
+    }
+}
+
+@FXML
     private void onMessageLinkClicked() {
         if (currentMode == Mode.ADMIN_SIGNIN) {
             currentMode = Mode.USER_LOGIN;

@@ -31,4 +31,6 @@ dependencies {
     implementation 'org.openjfx:javafx-controls:24.0.1'
     implementation 'org.openjfx:javafx-fxml:24.0.1'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
+   implementation files('libs/jbcrypt-0.4.jar')
+
 }

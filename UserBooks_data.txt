@@ -3,3 +3,5 @@ johndoe@gmail.com,To Kill a Mockingbird,2025-07-22,2025-07-17,0.0,false
 email=johndoe@gmail.com,books=Macbeth
 janedoe@gmail.com,Harry Potter and the Golden Snitch,2025-07-14,2025-07-14,0.0,false
 email=janedoe@gmail.com,books=
+indipheyonwaba@gmail.com,Macbeth,2025-07-22,,0.0,false
+email=indipheyonwaba@gmail.com,books=Macbeth

@@ -70,7 +70,7 @@ goto fail
 :execute
 @rem Setup the command line
 
-set CLASSPATH=%APP_HOME%\lib\bookcradle2.0.jar;%APP_HOME%\lib\javafx-fxml-24.0.1-win.jar;%APP_HOME%\lib\javafx-controls-24.0.1-win.jar;%APP_HOME%\lib\jackson-annotations-2.13.0.jar;%APP_HOME%\lib\jackson-core-2.13.0.jar;%APP_HOME%\lib\jackson-databind-2.13.0.jar;%APP_HOME%\lib\javafx-graphics-24.0.1-win.jar;%APP_HOME%\lib\javafx-base-24.0.1-win.jar
+set CLASSPATH=%APP_HOME%\lib\bookcradle2.0.jar;%APP_HOME%\lib\javafx-fxml-24.0.1-win.jar;%APP_HOME%\lib\javafx-controls-24.0.1-win.jar;%APP_HOME%\lib\jackson-annotations-2.13.0.jar;%APP_HOME%\lib\jackson-core-2.13.0.jar;%APP_HOME%\lib\jackson-databind-2.13.0.jar;%APP_HOME%\lib\jbcrypt-0.4.jar;%APP_HOME%\lib\javafx-graphics-24.0.1-win.jar;%APP_HOME%\lib\javafx-base-24.0.1-win.jar
 
 
 @rem Execute bookcradle2.0

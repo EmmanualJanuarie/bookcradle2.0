@@ -34,6 +34,10 @@
             <HBox fx:id="passwordStrengthBar" alignment="CENTER" spacing="5" visible="false" managed="false">
                 <Rectangle fx:id="strengthIndicator" width="100" height="10" fill="GRAY"/>
             </HBox>
+
+            
+    <!-- Forgot Password Link -->
+    <Hyperlink fx:id="forgotPasswordLink" text="Forgot Password?" onAction="#onForgotPasswordClicked"/>
         </VBox>
 
         <!-- Submit Button -->
