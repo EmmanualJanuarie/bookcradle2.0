@@ -1,1 +1,10 @@
+<<<<<<< HEAD
 2025-07-22 | Borrowed | Macbeth
+=======
+2025-07-21 | Borrowed | Brave New World
+2025-07-21 | Borrowed | lomu the wife
+2025-07-21 | Borrowed | Hlomu the wife
+2025-07-21 | Borrowed | The Great Gatsby
+2025-07-21 | Borrowed | Romeo and Julliet
+2025-07-21 | Returned | Romeo and Julliet
+>>>>>>> bc67d0fbdcb3226ed96719e7cf91f3635cad9732

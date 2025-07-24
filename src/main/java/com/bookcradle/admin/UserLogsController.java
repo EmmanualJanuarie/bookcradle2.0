@@ -3,9 +3,9 @@ package com.bookcradle.admin;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.TableRow;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,6 +33,7 @@ public class UserLogsController {
     private TableColumn<UserLog, String> statusColumn;
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final double LATE_FEE_PER_DAY = 20.10;
 
     @FXML
     public void initialize() {
@@ -44,6 +45,23 @@ public class UserLogsController {
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         userLogsTable.setItems(loadLogsFromFile("LibraryData.txt"));
+
+        // Highlight rows based on status
+        userLogsTable.setRowFactory(tv -> new TableRow<>() {
+            @Override
+            protected void updateItem(UserLog log, boolean empty) {
+                super.updateItem(log, empty);
+                if (log == null || empty) {
+                    setStyle("");
+                } else if ("Returned Late".equals(log.getStatus())) {
+                    setStyle("-fx-background-color: #ffe5e5;"); // Light red
+                } else if ("User Paid Fee".equals(log.getStatus())) {
+                    setStyle("-fx-background-color: #d4f8d4;"); // Light green
+                } else {
+                    setStyle("");
+                }
+            }
+        });
     }
 
     private ObservableList<UserLog> loadLogsFromFile(String filePath) {
@@ -60,23 +78,29 @@ public class UserLogsController {
                 String book = parts[1].trim();
                 LocalDate borrowDate = LocalDate.parse(parts[2].trim(), DATE_FORMAT);
                 LocalDate returnDate = null;
-                if (parts.length > 3 && !parts[3].trim().isEmpty()) {
-                    returnDate = LocalDate.parse(parts[3].trim(), DATE_FORMAT);
-                }
-
                 double lateFee = 0;
                 String status;
-                if (returnDate != null) {
-                    if (lateFee > 0) {
+
+                boolean isPaidEntry = parts.length > 5 && parts[5].contains("[PAID]");
+
+                if (parts.length > 3 && !parts[3].trim().isEmpty()) {
+                    returnDate = LocalDate.parse(parts[3].trim(), DATE_FORMAT);
+
+                    if (parts.length > 4 && !parts[4].trim().isEmpty()) {
+                        lateFee = Double.parseDouble(parts[4].trim());
+                    }
+
+                    if (isPaidEntry) {
+                        status = "User Paid Fee";
+                    } else if (lateFee > 0) {
                         status = "Returned Late";
                     } else {
                         status = "Returned On Time";
                     }
-                    lateFee = parts.length > 4 ? Double.parseDouble(parts[4].trim()) : 0;
                 } else {
                     if (LocalDate.now().isAfter(borrowDate.plusDays(14))) {
                         long daysLate = LocalDate.now().toEpochDay() - borrowDate.plusDays(14).toEpochDay();
-                        lateFee = daysLate * 2.0;
+                        lateFee = daysLate * LATE_FEE_PER_DAY;
                         status = "Overdue";
                     } else {
                         status = "Borrowed";

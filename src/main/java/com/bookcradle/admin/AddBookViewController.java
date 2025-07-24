@@ -4,11 +4,7 @@ import com.bookcradle.models.Book;
 import com.bookcradle.services.BookService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.DateCell;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
-
-import java.time.LocalDate;
 
 public class AddBookViewController {
 
@@ -24,24 +20,10 @@ public class AddBookViewController {
     private TextField genreField;
     @FXML
     private TextField yearField;
-    @FXML
-    private DatePicker dueDateField;
 
     @FXML
     public void initialize() {
-        restrictDueDateToCurrentYear();
-    }
-
-    private void restrictDueDateToCurrentYear() {
-        int currentYear = LocalDate.now().getYear();
-
-        dueDateField.setDayCellFactory(_ -> new DateCell() {
-            @Override
-            public void updateItem(LocalDate date, boolean empty) {
-                super.updateItem(date, empty);
-                setDisable(empty || date == null || date.getYear() != currentYear);
-            }
-        });
+        // No dueDateField anymore
     }
 
     @FXML
@@ -51,16 +33,9 @@ public class AddBookViewController {
         String isbn = isbnField.getText();
         String genre = genreField.getText();
         String yearText = yearField.getText();
-        LocalDate dueDate = dueDateField.getValue();
 
-        if (title.isEmpty() || author.isEmpty() || isbn.isEmpty() || genre.isEmpty() || yearText.isEmpty()
-                || dueDate == null) {
+        if (title.isEmpty() || author.isEmpty() || isbn.isEmpty() || genre.isEmpty() || yearText.isEmpty()) {
             showAlert("Error", "All fields must be filled out!");
-            return;
-        }
-
-        if (dueDate.getYear() != LocalDate.now().getYear()) {
-            showAlert("Error", "Due date must be within the current year.");
             return;
         }
 
@@ -72,7 +47,8 @@ public class AddBookViewController {
             return;
         }
 
-        Book book = new Book(title, author, isbn, genre, year, dueDate, 0);
+        // Set dueDate to null because it's set during borrowing
+        Book book = new Book(title, author, isbn, genre, year, null, 0);
         bookService.addBook(book);
 
         showAlert("Success", "Book added successfully!");
@@ -85,7 +61,6 @@ public class AddBookViewController {
         isbnField.clear();
         genreField.clear();
         yearField.clear();
-        dueDateField.setValue(null);
     }
 
     private void showAlert(String title, String message) {

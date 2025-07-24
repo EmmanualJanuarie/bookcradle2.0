@@ -1,4 +1,10 @@
 name=Ntombi,surname=Qandashe,email=NtombiQandashe@capaciti.org.za,password=5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5
 name=John,surname=Doe,email=johndoe@gmail.com,password=5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8
 name=Jane,surname=Doe,email=janedoe@gmail.com,password=5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8
+<<<<<<< HEAD
 name=Indiphe,surname=Nondlazi,email=indipheyonwaba@gmail.com,password=2782206c47c4d58e0da0202e356ff06468e8b273de67630a9a3f22749a633fee
+=======
+name=Indiphe,surname=Nondlazi,email=indipheyowaba@gmail.com,password=9acaa163191cbe499e73ffac78ea247ee30630d5bcc3aabd7cd1dfb12e16182e
+name=Indiphe,surname=Nondlazi,email=indipheyonwaba@gmail.com,password=9acaa163191cbe499e73ffac78ea247ee30630d5bcc3aabd7cd1dfb12e16182e
+name=Banzi,surname=Dube,email=banziDubde@gmail.com,password=ae1c286211395721336012ce8813752de8f249c9532da6a2aa09603df684593b
+>>>>>>> bc67d0fbdcb3226ed96719e7cf91f3635cad9732

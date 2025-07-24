@@ -1,2 +1,7 @@
+indipheyonwaba@gmail.com,Indiphe,Nondlazi,3,Brave New World;Hlomu the wife;The Great Gatsby
 johndoe@gmail.com,John,Doe,1,Macbeth
+<<<<<<< HEAD
 indipheyonwaba@gmail.com,Indiphe,Nondlazi,1,Macbeth
+=======
+banziDubde@gmail.com,Banzi,Dube,1,Fahrenheit 451
+>>>>>>> bc67d0fbdcb3226ed96719e7cf91f3635cad9732
