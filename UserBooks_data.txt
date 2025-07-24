@@ -4,11 +4,9 @@ email=johndoe@gmail.com,books=Macbeth
 janedoe@gmail.com,Harry Potter and the Golden Snitch,2025-07-14,2025-07-14,0.0,false
 email=janedoe@gmail.com,books=
 <<<<<<< HEAD
-indipheyonwaba@gmail.com,Macbeth,2025-07-22,,0.0,false
-email=indipheyonwaba@gmail.com,books=Macbeth
-=======
 indipheyonwaba@gmail.com,Romeo and Julliet,2025-07-21,2025-07-21,0.0,false
 email=indipheyonwaba@gmail.com,books=Brave New World;Hlomu the wife;The Great Gatsby
+=======
 banziDubde@gmail.com,Fahrenheit 451,2025-07-22,,0.0,false
 email=banziDubde@gmail.com,books=Fahrenheit 451
 >>>>>>> bc67d0fbdcb3226ed96719e7cf91f3635cad9732
